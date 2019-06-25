@@ -36,19 +36,21 @@ public class ModelController {
 
     /**
      * 获取流程模型列表
+     *
      * @param page
      * @param pageNum
      * @return
      */
     @GetMapping("/list")
-    public ResponseEntity getModels(@RequestParam(required = false,defaultValue = "0") Integer page,
-                                    @RequestParam(required = false,defaultValue = "10") Integer pageNum) {
+    public ResponseEntity getModels(@RequestParam(required = false, defaultValue = "0") Integer page,
+                                    @RequestParam(required = false, defaultValue = "10") Integer pageNum) {
         List<Model> models = repositoryService.createModelQuery().orderByCreateTime().desc().listPage(page, pageNum);
         return ResponseEntity.ok(models);
     }
 
     /**
      * 创建流程模型
+     *
      * @param request
      * @param response
      */
@@ -81,13 +83,14 @@ public class ModelController {
             repositoryService.addModelEditorSource(modelData.getId(), editorNode.toString().getBytes("utf-8"));
             response.sendRedirect(request.getContextPath() + "/modeler.html?modelId=" + modelData.getId());
         } catch (Exception e) {
-            log.error("流程创建失败，e={}",e.getMessage());
+            log.error("流程创建失败，e={}", e.getMessage());
             e.printStackTrace();
         }
     }
 
     /**
      * 通过id删除流程模型
+     *
      * @param modelId
      */
     @DeleteMapping("/remove")
@@ -100,7 +103,7 @@ public class ModelController {
         } catch (Exception e) {
             map.put("success", false);
             map.put("msg", "流程不存在，modelId=" + modelId);
-            log.error("e={}",e.getMessage());
+            log.error("e={}", e.getMessage());
             e.printStackTrace();
         }
         return ResponseEntity.ok(map);
@@ -108,31 +111,32 @@ public class ModelController {
 
     /**
      * 流程模型部署
+     *
      * @param modelId
      */
     @PostMapping("/deploy/{modelId}")
     public ResponseEntity deploy(@PathVariable("modelId") String modelId) {
         Map map = new HashMap<>(10);
         Model model = repositoryService.getModel(modelId);
-        if (model==null) {
-            map.put("success",false);
-            map.put("msg", "流程不存在，modelId="+modelId);
-            log.error("流程不存在，modelId={}",modelId);
+        if (model == null) {
+            map.put("success", false);
+            map.put("msg", "流程不存在，modelId=" + modelId);
+            log.error("流程不存在，modelId={}", modelId);
             return ResponseEntity.ok(map);
         }
         try {
             byte[] modelByte = repositoryService.getModelEditorSource(model.getId());
             if (modelByte == null) {
                 map.put("success", false);
-                map.put("msg","模型数据为空,请先设计好，再部署！");
-                log.error("模型数据为空,请先设计好，再部署！modelId={}",modelId);
+                map.put("msg", "模型数据为空,请先设计好，再部署！");
+                log.error("模型数据为空,请先设计好，再部署！modelId={}", modelId);
                 return ResponseEntity.ok(map);
             }
             JsonNode modelNode = new ObjectMapper().readTree(modelByte);
             BpmnModel bpmnModel = new BpmnJsonConverter().convertToBpmnModel(modelNode);
-            if (bpmnModel.getProcesses().size()==0) {
+            if (bpmnModel.getProcesses().size() == 0) {
                 map.put("success", false);
-                map.put("msg","数据模型不符要求，请至少设计一条主线流程");
+                map.put("msg", "数据模型不符要求，请至少设计一条主线流程");
                 log.error("数据模型不符要求，请至少设计一条主线流程");
                 return ResponseEntity.ok(map);
             }
@@ -146,13 +150,13 @@ public class ModelController {
             model.setDeploymentId(deployment.getId());
             repositoryService.saveModel(model);
             map.put("success", true);
-            map.put("msg",model.getName()+"流程发布成功");
-            log.info("流程发布成功，modelId={}",modelId);
+            map.put("msg", model.getName() + "流程发布成功");
+            log.info("流程发布成功，modelId={}", modelId);
             return ResponseEntity.ok(map);
         } catch (Exception e) {
             map.put("success", false);
-            map.put("msg",model.getName()+"流程发布失败");
-            log.error("modelId={}，流程发布失败，e={}",modelId,e);
+            map.put("msg", model.getName() + "流程发布失败");
+            log.error("modelId={}，流程发布失败，e={}", modelId, e);
         }
         return ResponseEntity.ok(map);
     }

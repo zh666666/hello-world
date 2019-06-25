@@ -28,7 +28,6 @@ public class ProcessController {
     private RepositoryService repositoryService;
 
     /**
-     *
      * 获取已经部署流程
      *
      * @return
@@ -40,11 +39,11 @@ public class ProcessController {
         List<Map<String, String>> list = new ArrayList<>(processDefinitions.size());
         for (ProcessDefinition processDefinition : processDefinitions) {
             Map map = new HashMap<>();
-            map.put("id",processDefinition.getId());
+            map.put("id", processDefinition.getId());
             map.put("processDefinitionKey", processDefinition.getKey());
-            map.put("name",processDefinition.getName());
-            map.put("deploymentId",processDefinition.getDeploymentId());
-            map.put("description",processDefinition.getDescription());
+            map.put("name", processDefinition.getName());
+            map.put("deploymentId", processDefinition.getDeploymentId());
+            map.put("description", processDefinition.getDescription());
             list.add(map);
         }
         return ResponseEntity.ok(list);

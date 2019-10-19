@@ -7,6 +7,8 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/task")
 @Slf4j
 public class TaskController {
+    private static final Logger log = LogManager.getLogger(TaskController.class);
 
     @Autowired
     private RuntimeService runtimeService;
@@ -61,7 +64,7 @@ public class TaskController {
      *
      * @param businessKey 请假事件id
      * @param assignee    委办人/向谁请假
-     * @param condition   提交/取消（1为提交，0为取消）
+     * @param condition   提交/取消（1为提交，2为取消）
      * @return
      */
     @PostMapping("/completeBySubmitter")

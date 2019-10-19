@@ -11,6 +11,8 @@ import org.activiti.editor.language.json.converter.BpmnJsonConverter;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.Model;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +32,7 @@ import java.util.Map;
 @Slf4j
 @RequestMapping("/model")
 public class ModelController {
+    private static final Logger log = LogManager.getLogger(ModelController.class);
 
     @Autowired
     private RepositoryService repositoryService;

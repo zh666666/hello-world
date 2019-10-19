@@ -19,9 +19,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @Author: Baron
+ * @Author: zh
  * @Description: task流程实例controller
  * @Date: Created in 2019/6/25 10:03
+ * type
+ * 0员工取消请假 1员工申请请假到部门经理
+ * 2部门经理驳回 3提交总经理 4总经理驳回 5总经理同意 6部门经理同意
+ * 7人事驳回 8人事同意
  */
 @RestController
 @RequestMapping("/task")
@@ -64,7 +68,7 @@ public class TaskController {
      *
      * @param businessKey 请假事件id
      * @param assignee    委办人/向谁请假
-     * @param condition   提交/取消（1为提交，2为取消）
+     * @param condition   提交/取消（1为提交，0为取消）
      * @return
      */
     @PostMapping("/completeBySubmitter")
